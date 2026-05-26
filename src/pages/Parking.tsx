@@ -7,7 +7,8 @@ export function Parking() {
 
   return (
     <>
-      <h1>Parking</h1>
+      <h1 className="text-2xl font-medium text-gray-900 mb-1">Parkings</h1>
+      <p className="text-sm text-gray-500 mb-6">Real-time availability across Ghent</p>
       <ParkingFilter
         search={search}
         setSearch={setSearch}

@@ -1,36 +1,116 @@
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
+import { ArrowLeft, Clock, Phone, MapPin, User, Star } from 'lucide-react'
 import { parseLocationAndDimension } from '../utils/parseLocation'
 import { ParkingMap } from '../components/ParkingMap'
 import { useParkingDetail } from '../hooks/useParkingDetail'
 
 export function ParkingDetail() {
     const { name } = useParams<{ name: string }>()
-    const  { parking, loading, error } = useParkingDetail(name!)
+    const navigate = useNavigate()
+    const { parking, loading, error } = useParkingDetail(name!)
 
-    if (loading) return <div>Loading...</div>
-    if (error) return <div>Error: {error}</div>
-    if (!parking) return <div>Parking not found</div>
+    if (loading) return <div className="text-sm text-gray-500 mt-8 text-center">Loading...</div>
+    if (error) return <div className="text-sm text-red-500 mt-8 text-center">Error: {error}</div>
+    if (!parking) return <div className="text-sm text-gray-500 mt-8 text-center">Parking not found</div>
 
     const location = parseLocationAndDimension(parking.locationanddimension)
+    const occupancyPercent = Math.round((1 - parking.availablecapacity / parking.totalcapacity) * 100)
+    const barColor = occupancyPercent > 85 ? 'bg-red-500' : occupancyPercent > 60 ? 'bg-amber-500' : 'bg-green-600'
 
     return (
-        <>
-            <h1>{parking.name}</h1>
-            <p>Status: {parking.isopennow ? 'Open' : 'Closed'}</p>
-            <p>Available: {parking.availablecapacity} / {parking.totalcapacity}</p>
-            <p>Occupation: {parking.occupation}%</p>
-            <p>Address: {location?.roadName ?? 'Not available'}</p>
-            <p>Phone: {location?.contactDetailsTelephoneNumber ?? 'Not available'}</p>
-            <p>Opening hours: {parking.openingtimesdescription}</p>
-            <p>Operator: {parking.operatorinformation}</p>
-            <p>Free parking: {parking.freeparking ? 'Yes' : 'No'}</p>
-            {parking.location && (
-                <ParkingMap
-                    lat={parking.location.lat}
-                    lon={parking.location.lon}
-                    name={parking.name}
-                />
-            )}
-        </>
+        <div className="max-w-2xl">
+
+            <button
+                onClick={() => navigate('/parking')}
+                className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-900 transition mb-6"
+            >
+                <ArrowLeft size={14} />
+                Back to parkings
+            </button>
+
+            <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+
+                <div className="p-6 border-b border-gray-100">
+                    <div className="flex items-start justify-between gap-4">
+                        <div>
+                            <h1 className="text-xl font-medium text-gray-900 mb-2">{parking.name}</h1>
+                            <div className="flex items-center gap-2">
+                                <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-full ${parking.isopennow ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
+                                    <span className={`w-1.5 h-1.5 rounded-full ${parking.isopennow ? 'bg-green-600' : 'bg-red-500'}`} />
+                                    {parking.isopennow ? 'Open' : 'Closed'}
+                                </span>
+                                {parking.freeparking === 1 && (
+                                    <span className="inline-flex items-center text-xs font-medium px-2 py-1 rounded-full bg-blue-50 text-blue-800">
+                                        Free parking
+                                    </span>
+                                )}
+                            </div>
+                        </div>
+                        <button
+                            className="text-gray-300 hover:text-blue-600 transition flex-shrink-0"
+                            aria-label="Add to favourites"
+                        >
+                            <Star size={20} strokeWidth={2} />
+                        </button>
+                    </div>
+                </div>
+
+                <div className="p-6 border-b border-gray-100">
+                    <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm text-gray-500">Available spaces</span>
+                        <span className="text-sm font-medium text-gray-900">{parking.availablecapacity} / {parking.totalcapacity}</span>
+                    </div>
+                    <div className="h-2 bg-gray-100 rounded-full">
+                        <div
+                            className={`h-2 rounded-full transition-all ${barColor}`}
+                            style={{ width: `${Math.max(0, 100 - occupancyPercent)}%` }}
+                        />
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1.5">{occupancyPercent}% occupied</p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-0 divide-x divide-y divide-gray-100">
+                    <div className="p-4 flex items-start gap-3">
+                        <MapPin size={14} className="text-gray-400 mt-0.5 flex-shrink-0" />
+                        <div>
+                            <p className="text-xs text-gray-400 mb-0.5">Address</p>
+                            <p className="text-sm text-gray-900">{location?.roadName ?? 'Not available'}</p>
+                        </div>
+                    </div>
+                    <div className="p-4 flex items-start gap-3">
+                        <Phone size={14} className="text-gray-400 mt-0.5 flex-shrink-0" />
+                        <div>
+                            <p className="text-xs text-gray-400 mb-0.5">Phone</p>
+                            <p className="text-sm text-gray-900">{location?.contactDetailsTelephoneNumber ?? 'Not available'}</p>
+                        </div>
+                    </div>
+                    <div className="p-4 flex items-start gap-3">
+                        <Clock size={14} className="text-gray-400 mt-0.5 flex-shrink-0" />
+                        <div>
+                            <p className="text-xs text-gray-400 mb-0.5">Opening hours</p>
+                            <p className="text-sm text-gray-900">{parking.openingtimesdescription}</p>
+                        </div>
+                    </div>
+                    <div className="p-4 flex items-start gap-3">
+                        <User size={14} className="text-gray-400 mt-0.5 flex-shrink-0" />
+                        <div>
+                            <p className="text-xs text-gray-400 mb-0.5">Operator</p>
+                            <p className="text-sm text-gray-900">{parking.operatorinformation}</p>
+                        </div>
+                    </div>
+                </div>
+
+                {parking.location && (
+                    <div className="h-64">
+                        <ParkingMap
+                            lat={parking.location.lat}
+                            lon={parking.location.lon}
+                            name={parking.name}
+                        />
+                    </div>
+                )}
+
+            </div>
+        </div>
     )
 }

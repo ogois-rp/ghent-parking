@@ -17,36 +17,38 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
-      <Header />
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        <Routes>
-          <Route path="/" element={
-            localStorageService.getOnboardingComplete()
-              ? <Navigate to="/parking" />
-              : <Navigate to="/onboarding" />
-          } />
-          <Route path="/onboarding" element={
-            onboardingComplete
-              ? <Navigate to="/parking" />
-              : <Onboarding onComplete={handleOnboardingComplete} />
-          } />
-          <Route path="/parking" element={
-            onboardingComplete ? <Parking /> : <Navigate to="/onboarding" />
-          } />
-          <Route path="/parking/:name" element={
-            localStorageService.getOnboardingComplete()
-              ? <ParkingDetail />
-              : <Navigate to="/onboarding" />
-          } />
-          <Route path="/profile" element={
-            localStorageService.getOnboardingComplete()
-              ? <Profile />
-              : <Navigate to="/onboarding" />
-          } />
-        </Routes>
-      </div>
-    </BrowserRouter>
+    <div className="min-h-screen bg-gray-50">
+      <BrowserRouter>
+        <Header />
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <Routes>
+            <Route path="/" element={
+              localStorageService.getOnboardingComplete()
+                ? <Navigate to="/parking" />
+                : <Navigate to="/onboarding" />
+            } />
+            <Route path="/onboarding" element={
+              onboardingComplete
+                ? <Navigate to="/parking" />
+                : <Onboarding onComplete={handleOnboardingComplete} />
+            } />
+            <Route path="/parking" element={
+              onboardingComplete ? <Parking /> : <Navigate to="/onboarding" />
+            } />
+            <Route path="/parking/:name" element={
+              localStorageService.getOnboardingComplete()
+                ? <ParkingDetail />
+                : <Navigate to="/onboarding" />
+            } />
+            <Route path="/profile" element={
+              localStorageService.getOnboardingComplete()
+                ? <Profile />
+                : <Navigate to="/onboarding" />
+            } />
+          </Routes>
+        </div>
+      </BrowserRouter>
+    </div>
   )
 }
 

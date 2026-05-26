@@ -1,5 +1,6 @@
 import type { UserProfile } from "../../types/user"
 import { useProfile } from "../../hooks/useProfile"
+import { FieldInput } from "./FieldInput"
 
 interface ProfileFormProps {
     values: UserProfile
@@ -18,65 +19,41 @@ export function ProfileForm({ values, onChange, onSubmit, submitLabel, submitted
     }
 
     return (
-        <>
-            <div className="flex flex-col gap-4 my-3">
-                <input
-                    type="text"
-                    placeholder="First Name"
-                    className="border p-2 w-full"
-                    value={values.firstName}
-                    onChange={onChange}
-                    name="firstName"
-                />
-                {submitted && !values.firstName && <p className="text-red-500 text-sm">First name should not be empty</p>}
-
-                <input
-                    type="text"
-                    placeholder="Last Name"
-                    className="border p-2 w-full"
-                    value={values.lastName}
-                    onChange={onChange}
-                    name="lastName"
-                />
-                {submitted && !values.lastName && <p className="text-red-500 text-sm">Last name should not be empty</p>}
-
-                <input
-                    type="text"
-                    placeholder="License Plate"
-                    className="border p-2 w-full"
-                    value={values.licensePlate}
-                    onChange={onChange}
-                    name="licensePlate"
-                />
-                {submitted && !values.licensePlate && <p className="text-red-500 text-sm">License plate should not be empty</p>}
-
-                <input
-                    type="text"
-                    placeholder="Car Maker"
-                    className="border p-2 w-full"
-                    value={values.carMaker}
-                    onChange={onChange}
-                    name="carMaker"
-                />
-                {submitted && !values.carMaker && <p className="text-red-500 text-sm">Car maker should not be empty</p>}
-
-                <input
-                    type="text"
-                    placeholder="Car Model"
-                    className="border p-2 w-full"
-                    value={values.carModel}
-                    onChange={onChange}
-                    name="carModel"
-                />
-                {submitted && !values.carModel && <p className="text-red-500 text-sm">Car model should not be empty</p>}
+        <div className="flex flex-col gap-4">
+            <div>
+                <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-3">Personal details</p>
+                <div className="grid grid-cols-2 gap-3">
+                    <FieldInput label="First name" name="firstName" placeholder="Tiago" value={values.firstName} onChange={onChange} error={submitted && !values.firstName} />
+                    <FieldInput label="Last name" name="lastName" placeholder="Raposo" value={values.lastName} onChange={onChange} error={submitted && !values.lastName} />
+                </div>
             </div>
-            <button onClick={onSubmit} className="bg-blue-500 text-white px-4 py-2 rounded">{submitLabel}</button>
-            {submitLabel === 'Save' && <button
-                onClick={handleClear}
-                className="bg-red-500 text-white px-4 ml-2 py-2 rounded"
+
+            <div>
+                <p className="text-xs font-medium text-gray-400 uppercase tracking-wider mb-3">Vehicle details</p>
+                <div className="flex flex-col gap-3">
+                    <FieldInput label="License plate" name="licensePlate" placeholder="1-ABC-123" value={values.licensePlate} onChange={onChange} error={submitted && !values.licensePlate} />
+                    <div className="grid grid-cols-2 gap-3">
+                        <FieldInput label="Car make" name="carMaker" placeholder="Volkswagen" value={values.carMaker} onChange={onChange} error={submitted && !values.carMaker} />
+                        <FieldInput label="Car model" name="carModel" placeholder="Golf" value={values.carModel} onChange={onChange} error={submitted && !values.carModel} />
+                    </div>
+                </div>
+            </div>
+
+            <button
+                onClick={onSubmit}
+                className="w-full bg-blue-800 hover:bg-blue-900 text-white text-sm font-medium py-2.5 rounded-lg transition"
             >
-                Reset Profile
-            </button>}
-        </>
+                {submitLabel}
+            </button>
+
+            {submitLabel === 'Save' && (
+                <button
+                    onClick={handleClear}
+                    className="w-full bg-red-50 hover:bg-red-100 text-red-700 text-sm font-medium py-2.5 rounded-lg transition"
+                >
+                    Reset profile
+                </button>
+            )}
+        </div>
     )
 }
