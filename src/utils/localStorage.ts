@@ -1,5 +1,3 @@
-
-import type { ParkingRecord } from "../types/parking"
 import type { UserProfile } from "../types/user"
 
 const localStorageService = {
@@ -32,7 +30,7 @@ const localStorageService = {
             return []
         }
     },
-    setFavourites(favourites: ParkingRecord[]) {
+    setFavourites(favourites: string[]) {
         localStorage.setItem('favourites', JSON.stringify(favourites))
     },
     clearAll() {

@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Clock, Phone, MapPin, User, Star } from 'lucide-react'
+import { ArrowLeft, Clock, Phone, MapPin, User, Star, ExternalLink } from 'lucide-react'
 import { parseLocationAndDimension } from '../utils/parseLocation'
 import { ParkingMap } from '../components/ParkingMap'
 import { useParkingDetail } from '../hooks/useParkingDetail'
@@ -33,15 +33,21 @@ export function ParkingDetail() {
                 <div className="p-6 border-b border-gray-100">
                     <div className="flex items-start justify-between gap-4">
                         <div>
-                            <h1 className="text-xl font-medium text-gray-900 mb-2">{parking.name}</h1>
-                            <div className="flex items-center gap-2">
+                            <h1 className="text-xl font-medium text-gray-900 mb-3">{parking.name}</h1>
+                            <div className="flex flex-wrap gap-2">
                                 <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2 py-1 rounded-full ${parking.isopennow ? 'bg-green-50 text-green-800' : 'bg-red-50 text-red-800'}`}>
                                     <span className={`w-1.5 h-1.5 rounded-full ${parking.isopennow ? 'bg-green-600' : 'bg-red-500'}`} />
                                     {parking.isopennow ? 'Open' : 'Closed'}
+                                    {parking.openingtimesdescription ? ` · ${parking.openingtimesdescription}` : ''}
                                 </span>
                                 {parking.freeparking === 1 && (
                                     <span className="inline-flex items-center text-xs font-medium px-2 py-1 rounded-full bg-blue-50 text-blue-800">
                                         Free parking
+                                    </span>
+                                )}
+                                {parking.categorie && (
+                                    <span className="inline-flex items-center text-xs font-medium px-2 py-1 rounded-full bg-gray-100 text-gray-600">
+                                        {parking.categorie}
                                     </span>
                                 )}
                             </div>
@@ -60,16 +66,23 @@ export function ParkingDetail() {
                         <span className="text-sm text-gray-500">Available spaces</span>
                         <span className="text-sm font-medium text-gray-900">{parking.availablecapacity} / {parking.totalcapacity}</span>
                     </div>
-                    <div className="h-2 bg-gray-100 rounded-full">
+                    <div className="h-2 bg-gray-100 rounded-full mb-1.5">
                         <div
                             className={`h-2 rounded-full transition-all ${barColor}`}
                             style={{ width: `${Math.max(0, 100 - occupancyPercent)}%` }}
                         />
                     </div>
-                    <p className="text-xs text-gray-400 mt-1.5">{occupancyPercent}% occupied</p>
+                    <p className="text-xs text-gray-400">{occupancyPercent}% occupied</p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-0 divide-x divide-y divide-gray-100">
+                {parking.description && (
+                    <div className="p-6 border-b border-gray-100">
+                        <p className="text-xs text-gray-400 mb-1.5">About</p>
+                        <p className="text-sm text-gray-600 leading-relaxed">{parking.description}</p>
+                    </div>
+                )}
+
+                <div className="grid grid-cols-2 divide-x divide-y divide-gray-100">
                     <div className="p-4 flex items-start gap-3">
                         <MapPin size={14} className="text-gray-400 mt-0.5 flex-shrink-0" />
                         <div>
@@ -98,10 +111,27 @@ export function ParkingDetail() {
                             <p className="text-sm text-gray-900">{parking.operatorinformation}</p>
                         </div>
                     </div>
+                    {parking.urllinkaddress && (
+                        <div className="col-span-2 p-4 flex items-start gap-3 border-t border-gray-100">
+                            <ExternalLink size={14} className="text-gray-400 mt-0.5 flex-shrink-0" />
+                            <div>
+                                <p className="text-xs text-gray-400 mb-0.5">More info</p>
+                                <a
+                                    href={parking.urllinkaddress}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-sm text-blue-700 hover:text-blue-900 transition flex items-center gap-1"
+                                >
+                                    stad.gent — {parking.name}
+                                    <ExternalLink size={11} />
+                                </a>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {parking.location && (
-                    <div className="h-64">
+                    <div className="h-64 border-t border-gray-100">
                         <ParkingMap
                             lat={parking.location.lat}
                             lon={parking.location.lon}
