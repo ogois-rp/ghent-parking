@@ -1,73 +1,106 @@
-# React + TypeScript + Vite
+# ParkGent
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Real-time parking availability across Ghent, built with React and the [Stad Gent Open Data API](https://data.stad.gent/explore/dataset/bezetting-parkeergarages-real-time).
 
-Currently, two official plugins are available:
+🚗 **Live demo:** https://ghent-parking-phi.vercel.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Real-time parking availability from the Ghent open data API
+- Search parking structures by name
+- Sort by name or available spaces (ascending / descending)
+- Detail page with map, capacity bar, and full parking info
+- Favourite parking spots — persisted on device
+- Onboarding form to save your personal and vehicle details
+- Profile page to edit your details or reset the app
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Tech stack
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- [React](https://react.dev) + [TypeScript](https://www.typescriptlang.org)
+- [Vite](https://vitejs.dev) — build tool
+- [React Router](https://reactrouter.com) — client-side routing
+- [Tailwind CSS](https://tailwindcss.com) — styling
+- [React Leaflet](https://react-leaflet.js.org) — map on detail page
+- [Lucide React](https://lucide.dev) — icons
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Architecture
+
+Feature-based folder structure with a layered data flow:
+
+pages → hooks → services → apiClient → Ghent API
+
+- `pages/` — thin route components, compose hooks and components
+- `components/` — UI components grouped by feature
+- `hooks/` — custom hooks owning data fetching and local state
+- `services/` — API call definitions, no Redux or UI logic
+- `utils/` — apiClient, localStorage helpers, parsing utilities
+- `types/` — shared TypeScript interfaces
+
+All user data (profile, favourites, onboarding flag) is stored in `localStorage` — no backend required.
+
+---
+
+## Getting started
+
+### Prerequisites
+- Node.js 18+
+
+### Install and run
+
+```bash
+git clone https://github.com/yourusername/ghent-parking.git
+cd ghent-parking
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Environment variables
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Copy `.env.example` to `.env.local` and fill in the values:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cp .env.example .env.local
 ```
+
+VITE_API_BASE_URL=https://data.stad.gent/api/explore/v2.1/catalog/datasets/bezetting-parkeergarages-real-time
+
+---
+
+## Project structure
+
+src/
+pages/
+Onboarding.tsx
+Parking.tsx
+ParkingDetail.tsx
+Profile.tsx
+components/
+parking/
+ParkingCard.tsx
+ParkingFilter.tsx
+ParkingMap.tsx
+onboarding/
+ProfileForm.tsx
+shared/
+FieldInput.tsx
+Header.tsx
+hooks/
+useParking.ts
+useParkingDetail.ts
+useProfile.ts
+useFavourites.ts
+services/
+parkingService.ts
+utils/
+apiClient.ts
+localStorage.ts
+parseLocation.ts
+types/
+parking.ts
+user.ts
