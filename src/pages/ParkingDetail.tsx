@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Clock, Tag, MapPin, User, Star, ExternalLink } from 'lucide-react'
 import { parseLocationAndDimension } from '../utils/parseLocation'
+import { useFavourites } from '../hooks/useFavourites'
 import { ParkingMap } from '../components/ParkingMap'
 import { useParkingDetail } from '../hooks/useParkingDetail'
 
@@ -8,6 +9,7 @@ export function ParkingDetail() {
     const { name } = useParams<{ name: string }>()
     const navigate = useNavigate()
     const { parking, loading, error } = useParkingDetail(name!)
+    const { toggleFavourite, isFavourite } = useFavourites()
 
     if (loading) return <div className="text-sm text-gray-500 mt-8 text-center">Loading...</div>
     if (error) return <div className="text-sm text-red-500 mt-8 text-center">Error: {error}</div>
@@ -54,9 +56,10 @@ export function ParkingDetail() {
                         </div>
                         <button
                             className="text-gray-300 hover:text-blue-600 transition flex-shrink-0"
-                            aria-label="Add to favourites"
+                            aria-label={isFavourite(parking.name) ? 'Remove from favourites' : 'Add to favourites'}
+                            onClick={() => toggleFavourite(parking.name)}
                         >
-                            <Star size={20} strokeWidth={2} />
+                            <Star size={20} strokeWidth={2} fill={isFavourite(parking.name) ? 'currentColor' : 'none'} />
                         </button>
                     </div>
                 </div>
