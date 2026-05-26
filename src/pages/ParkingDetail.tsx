@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Clock, Phone, MapPin, User, Star, ExternalLink } from 'lucide-react'
+import { ArrowLeft, Clock, Tag, MapPin, User, Star, ExternalLink } from 'lucide-react'
 import { parseLocationAndDimension } from '../utils/parseLocation'
 import { ParkingMap } from '../components/ParkingMap'
 import { useParkingDetail } from '../hooks/useParkingDetail'
@@ -91,10 +91,10 @@ export function ParkingDetail() {
                         </div>
                     </div>
                     <div className="p-4 flex items-start gap-3">
-                        <Phone size={14} className="text-gray-400 mt-0.5 flex-shrink-0" />
+                        <Tag size={14} className="text-gray-400 mt-0.5 flex-shrink-0" />
                         <div>
-                            <p className="text-xs text-gray-400 mb-0.5">Phone</p>
-                            <p className="text-sm text-gray-900">{location?.contactDetailsTelephoneNumber ?? 'Not available'}</p>
+                            <p className="text-xs text-gray-400 mb-0.5">Type</p>
+                            <p className="text-sm text-gray-900">{parking.type ?? 'Not available'}</p>
                         </div>
                     </div>
                     <div className="p-4 flex items-start gap-3">
