@@ -97,7 +97,7 @@ export function ParkingDetail() {
                         <Tag size={14} className="text-gray-400 mt-0.5 flex-shrink-0" />
                         <div>
                             <p className="text-xs text-gray-400 mb-0.5">Type</p>
-                            <p className="text-sm text-gray-900">{parking.type ?? 'Not available'}</p>
+                            <p className="text-sm text-gray-900">{(parking.type === 'carPark' ? 'Car Park' : parking.type === 'offStreetParkingGround' ? 'Off Street Parking Ground' : 'Not Available')}</p>
                         </div>
                     </div>
                     <div className="p-4 flex items-start gap-3">
