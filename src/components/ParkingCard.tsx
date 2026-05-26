@@ -30,7 +30,7 @@ export function ParkingCard({ parking, isFavourite = false, onToggleFavourite }:
         <h2 className="text-sm font-medium text-gray-900 leading-snug">{parking.name}</h2>
           <button
             className={`flex-shrink-0 ${isFavourite ? 'text-blue-600' : 'text-gray-300 hover:text-blue-400'} transition`}
-            onClick={e => { e.stopPropagation(); onToggleFavourite(parking.name) }}
+            onClick={e => { e.stopPropagation(); onToggleFavourite?.(parking.name) }}
             aria-label={isFavourite ? 'Remove from favourites' : 'Add to favourites'}
           >
             <Star size={16} fill={isFavourite ? 'currentColor' : 'none'} />
